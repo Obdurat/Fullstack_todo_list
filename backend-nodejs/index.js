@@ -1,7 +1,10 @@
 const { Sequelize } = require('sequelize');
 const express = require('express');
+const Routes = require('./routes/tasks');
+const { append } = require('express/lib/response');
 const server = express();
 const PORT = 3000;
+
 
 const sequelize = new Sequelize({
     host: 'localhost',
@@ -20,10 +23,12 @@ async function test() {
     }
 }
 
+//Middleware
+
+server.use(express.json());
+
 // Routes
 
-server.get('/try', (req, res) => {
-    res.send('Working !!!');
-})
+server.use('/api/v1/tasks', Routes)
 
 server.listen(PORT, async () => console.log(`Back-end Running at ${PORT}, ${await test()}`));
