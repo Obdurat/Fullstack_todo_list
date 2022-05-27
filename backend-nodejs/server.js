@@ -1,26 +1,10 @@
-const { Sequelize } = require('sequelize');
 const express = require('express');
-const Routes = require('./routes/routes');
 const server = express();
+const Routes = require('./routes/routes.js');
+const connectDB = require('./Database/connect.js');
+
+
 const PORT = 3000;
-
-
-const sequelize = new Sequelize({
-    host: 'localhost',
-    dialect: 'mysql',
-    port: '3306',
-    username: 'root',
-    password: 'password',
-});
-
-async function test() {
-    try {
-        await sequelize.authenticate();
-        return 'DB connection established'
-    } catch (e) {
-        return `DB connection failed ${e}`
-    }
-}
 
 //Middleware
 
@@ -28,6 +12,17 @@ server.use(express.json());
 
 // Routes
 
-server.use('/api/v1/tasks', Routes)
+server.use('/api/v1/tasks', Routes);
 
-server.listen(PORT, async () => console.log(`Back-end Running at ${PORT}, ${await test()}`));
+//DB
+
+const start = async () => {
+    try {
+        await connectDB()
+        server.listen(PORT, async () => console.log(`Back-end Running at ${PORT}, DB connection estabilished`));
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+start();
