@@ -1,7 +1,6 @@
 const { Sequelize } = require('sequelize');
 const express = require('express');
-const Routes = require('./routes/tasks');
-const { append } = require('express/lib/response');
+const Routes = require('./routes/routes');
 const server = express();
 const PORT = 3000;
 
