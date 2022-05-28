@@ -3,7 +3,7 @@ const taskModel = require('../Database/models/task')
 const allTasks = async (req, res) => {
     try {
         const tasks = await taskModel.findAll()
-        res.json(tasks);
+        res.status(200).json(tasks);
     } 
     catch (error) {
         res.json(error);
@@ -16,13 +16,13 @@ const addTask = async (req, res) => {
         if (!task) {        
             const newTask = taskModel.build(req.body);
             await newTask.save();
-            res.json({...req.body, status: 'SAVED SUSCESSFULLY'});        
+            res.status(201).json({...req.body, status: 'SAVED SUSCESSFULLY'});        
             return;
         }
-        res.json({ status: 'Task Already Exists' });
+        res.status(202).json({ status: 'Task Already Exists' });
     } 
     catch (error) {
-        res.json(error);
+        res.status(408).json(error);
     }
 }
 
@@ -30,13 +30,13 @@ const getTask = async (req, res) => {
     try {
         const task = await taskModel.findOne({ where: { id: +req.params.id }});
         if (task) {
-            res.json(task);
+            res.status(200).json(task);
             return;
         }
-        res.json({ status: 'Task not found'});
+        res.status(202).json({ status: 'Task not found'});
     } 
     catch (error) {
-        res.json(error);
+        res.status(408).json(error);
     }    
 }
 
@@ -46,13 +46,13 @@ const updateTask = async (req, res) => {
         if (foundTask) {
             foundTask.task = req.body.task
             await foundTask.save();
-            res.json({ task: foundTask.id, status: 'UPDATED SUCCESSFULLY' });
+            res.status(201).json({ task: foundTask.id, status: 'UPDATED SUCCESSFULLY' });
             return;
         }
-        res.json({ status: 'Task not found'});
+        res.status(202).json({ status: 'Task not found'});
     } 
     catch (error) {
-        res.json(error);
+        res.status(408).json(error);
     }
 }
 
@@ -62,12 +62,12 @@ const deleteTask = async (req, res) => {
         const task = await taskModel.findOne({ where: { id: +req.params.id }});
         if (task) {        
                 await taskModel.destroy({ where: { id: +req.params.id } });        
-                res.json({ task: req.params.id, status: 'REMOVED SUCCESSFULLY'});
+                res.status(201).json({ task: req.params.id, status: 'REMOVED SUCCESSFULLY'});
                 return;
             }    
-        res.json({ status: 'Task not found'});
+        res.status(202).json({ status: 'Task not found'});
     } catch (error) {
-        res.json(error);
+        res.status(408).json(error);
     }    
 }
 
