@@ -13,4 +13,4 @@ const connectDB = async () => {
     await sequelize.authenticate();    
 }
 
-module.exports = connectDB;
+module.exports = {connectDB, sequelize};
