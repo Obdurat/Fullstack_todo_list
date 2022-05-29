@@ -1,15 +1,15 @@
 const { sequelize } = require('../connect');
 const { DataTypes } = require('sequelize');
 
-const taskModel = sequelize.define('Task', {
+const userModel = sequelize.define('User', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV1,
         primaryKey: true,
         unique: true
     },
-    task: {
+    firstName: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
@@ -17,13 +17,21 @@ const taskModel = sequelize.define('Task', {
             is: /^[a-zA-Z0-9_.-]*$/
         }
     },
-    completed: {
+    lastName: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
-    }
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+            isEmail: true
+        }
+    }   
 });
 
-taskModel.sync();
+userModel.sync();
 
-module.exports = taskModel
+module.exports = userModel

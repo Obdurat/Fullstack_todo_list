@@ -1,7 +1,9 @@
 const express = require('express');
 const server = express();
-const Routes = require('./routes/routes.js');
+const taskRoutes = require('./routes/tasks/routes.js');
+const userRoutes = require('./routes/users/routes.js');
 const { connectDB } = require('./Database/connect.js');
+
 
 
 const PORT = 3000;
@@ -10,9 +12,11 @@ const PORT = 3000;
 
 server.use(express.json());
 
+
 // Routes
 
-server.use('/api/v1/tasks', Routes);
+server.use('/api/v1/tasks', taskRoutes);
+server.use('/api/v1/users', userRoutes);
 
 //DB
 

@@ -1,80 +1,60 @@
-const taskModel = require('../Database/models/task')
+const taskModel = require("../Database/models/task");
+const controllerWrapper = require("../middleware/async");
 
-const allTasks = async (req, res) => {
-    try {
-        const tasks = await taskModel.findAll()
-        res.status(200).json(tasks);
-    } 
-    catch (error) {
-        res.json(error);
-    }
-}
+const allTasks = controllerWrapper(async (req, res) => {
+  const tasks = await taskModel.findAll();
+  res.status(200).json(tasks);
+});
 
-const addTask = async (req, res) => {
-    try {
-        const task = await taskModel.findOne({ where: { task: req.body.task }});
-        if (!task) {        
-            const newTask = taskModel.build(req.body);
-            await newTask.save();
-            res.status(201).json({...req.body, status: 'SAVED SUSCESSFULLY'});        
-            return;
-        }
-        res.status(202).json({ status: 'Task Already Exists' });
-    } 
-    catch (error) {
-        res.status(408).json(error);
-    }
-}
+const addTask = controllerWrapper(async (req, res) => {
+  const task = await taskModel.findOne({ where: { task: req.body.task } });
+  if (task) {
+    res.status(202).json({ status: "Task Already Exists" });
+    return;
+  }
+  const newTask = taskModel.build(req.body);
+  await newTask.save();
+  res.status(201).json({ id: newTask.id,...req.body, status: "SAVED SUSCESSFULLY" });
+});
 
-const getTask = async (req, res) => {
-    try {
-        const task = await taskModel.findOne({ where: { id: +req.params.id }});
-        if (task) {
-            res.status(200).json(task);
-            return;
-        }
-        res.status(202).json({ status: 'Task not found'});
-    } 
-    catch (error) {
-        res.status(408).json(error);
-    }    
-}
+const getTask = controllerWrapper(async (req, res) => {
+  const task = await taskModel.findOne({ where: { id: +req.params.id } });
+  if (task) {
+    res.status(200).json(task);
+    return;
+  }
+  res.status(404).json({ status: "Task not found" });
+});
 
-const updateTask = async (req, res) => {
-    try {
-        const foundTask = await taskModel.findOne({ where: { id: +req.params.id } });
-        if (foundTask) {
-            foundTask.task = req.body.task
-            await foundTask.save();
-            res.status(201).json({ task: foundTask.id, status: 'UPDATED SUCCESSFULLY' });
-            return;
-        }
-        res.status(202).json({ status: 'Task not found'});
-    } 
-    catch (error) {
-        res.status(408).json(error);
-    }
-}
+const updateTask = controllerWrapper(async (req, res) => {
+  const foundTask = await taskModel.findOne({ where: { id: +req.params.id } });
+  if (foundTask) {
+    foundTask.task = req.body.task;
+    await foundTask.save();
+    res
+      .status(201)
+      .json({ task: foundTask.id, status: "UPDATED SUCCESSFULLY" });
+    return;
+  }
+  res.status(404).json({ status: "Task not found" });
+});
 
-const deleteTask = async (req, res) => {
-
-    try {
-        const task = await taskModel.findOne({ where: { id: +req.params.id }});
-        if (task) {        
-                await taskModel.destroy({ where: { id: +req.params.id } });        
-                res.status(201).json({ task: req.params.id, status: 'REMOVED SUCCESSFULLY'});
-                return;
-            }    
-        res.status(202).json({ status: 'Task not found'});
-    } catch (error) {
-        res.status(408).json(error);
-    }    
-}
+const deleteTask = controllerWrapper(async (req, res) => {
+  const task = await taskModel.findOne({ where: { id: +req.params.id } });
+  if (task) {
+    await taskModel.destroy({ where: { id: +req.params.id } });
+    res
+      .status(201)
+      .json({ task: req.params.id, status: "REMOVED SUCCESSFULLY" });
+    return;
+  }
+  res.status(404).json({ status: "Task not found" });
+});
 
 module.exports = {
-    allTasks,
-    addTask,
-    getTask,
-    updateTask,
-    deleteTask,
-}
+  allTasks,
+  addTask,
+  getTask,
+  updateTask,
+  deleteTask,
+};
