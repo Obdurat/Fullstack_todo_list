@@ -6,6 +6,6 @@ services:
     container_name: database
     restart: always
     ports:
-      - 3306:3306
+      - "$PORT_BINDING:$PORT_BINDING"
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: "$DB_PASSWORD"

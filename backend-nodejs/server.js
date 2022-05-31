@@ -5,9 +5,9 @@ const userRoutes = require('./routes/users/routes.js');
 const { connectDB } = require('./Database/connect.js');
 const notFound = require('./middleware/notFound');
 const errorHandler = require('./helpers/errorHandler');
-require('dotenv').config()
+require('dotenv').config();
 
-const PORT = 3000;
+const PORT = process.env.BACKEND_PORT || 3000;
 
 //Middleware
 
