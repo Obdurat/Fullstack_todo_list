@@ -3,8 +3,8 @@ const server = express();
 const taskRoutes = require('./routes/tasks/routes.js');
 const userRoutes = require('./routes/users/routes.js');
 const { connectDB } = require('./Database/connect.js');
-
-
+const notFound = require('./middleware/notFound');
+const errorHandler = require('./helpers/errorHandler');
 
 const PORT = 3000;
 
@@ -12,11 +12,12 @@ const PORT = 3000;
 
 server.use(express.json());
 
-
 // Routes
 
 server.use('/api/v1/tasks', taskRoutes);
 server.use('/api/v1/users', userRoutes);
+server.use(notFound);
+server.use(errorHandler)
 
 //DB
 

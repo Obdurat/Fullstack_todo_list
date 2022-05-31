@@ -4,13 +4,17 @@ const Router = express.Router();
 const {    
     addUser,     
     updateUser, 
-    deleteUser 
+    deleteUser,
+    loginUser
 } = require('../../controllers/users')
 
-Router.route('/')    
+Router.route('/register')    
     .post(addUser);
 
-Router.route('/:id')    
+Router.route('/login')
+    .post(loginUser);
+
+Router.route('/profile')    
     .patch(updateUser)
     .delete(deleteUser);
 

@@ -1,11 +1,12 @@
 const { sequelize } = require('../connect');
 const { DataTypes } = require('sequelize');
+const userModel = require('./user');
 
 const taskModel = sequelize.define('Task', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         allowNull: false,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         unique: true
     },
@@ -21,8 +22,11 @@ const taskModel = sequelize.define('Task', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
-    }
+    },    
 });
+
+taskModel.belongsTo(userModel, { onDelete: "CASCADE", onUpdate: "CASCADE", type: DataTypes.UUID });
+userModel.hasMany(taskModel);
 
 taskModel.sync();
 
