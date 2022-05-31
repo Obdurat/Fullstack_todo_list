@@ -1,70 +1,65 @@
 const taskModel = require("../Database/models/task");
 const controllerWrapper = require("../middleware/async");
-const jwt = require('jsonwebtoken');
+const verifyToken = require('../helpers/jwtAuth');
+const { newErrorCreator } = require('../errors/customError');
 
-const allTasks = controllerWrapper(async (req, res) => {
-  const something = req.headers['token'];
-  const user = jwt.verify(something, 'shasha');
-  console.log(user);
-  const tasks = await taskModel.findAll({
-      attributes: { 
-        exclude: ['UserId'] 
-      }},
-       { where: { UserId: user.id }});  
+const allTasks = controllerWrapper(async (req, res, next) => {
+  const token = req.headers['token'];
+  const credentials = verifyToken(token, next)  
+  const tasks = await taskModel.findAll({attributes: { exclude: ['UserId'] }, where: { UserId: credentials.id } });
   res.json(tasks);
 });
 
-const addTask = controllerWrapper(async (req, res) => {
-  const something = req.headers['token'];
-  const user = jwt.verify(something, 'shasha');
-  const task = await taskModel.findOne({ where: { task: req.body.task, UserId: user.id } });
-  if (task) {
-    res.status(202).json({ status: "Task Already Exists" });
-    return;
+const addTask = controllerWrapper(async (req, res, next) => {
+  const token = req.headers['token'];
+  const credentials = verifyToken(token, next);  
+  const task = await taskModel.findOne({ where: { task: req.body.task, UserId: credentials.id } });
+  if (task) {    
+    return next(newErrorCreator('Task already exists', 400));
   }
-  const newTask = taskModel.build({...req.body, UserId: user.id });
+  const newTask = taskModel.build({...req.body, UserId: credentials.id });  
   await newTask.save();
   res.status(201).json({ id: newTask.id,...req.body, status: "SAVED SUSCESSFULLY" });
 });
 
-const getTask = controllerWrapper(async (req, res) => {
-  const something = req.headers['token'];
-  const user = jwt.verify(something, 'shasha');
-  const task = await taskModel.findOne({ where: { id: +req.params.id, UserId: user.id } });
-  if (task) {
-    res.status(200).json(task);
-    return;
+const getTask = controllerWrapper(async (req, res, next) => {
+  const token = req.headers['token'];
+  const credentials = verifyToken(token, next);
+  const task = await taskModel.findOne({ attributes: { exclude: ['UserId'] }, where: { id: req.params.id, UserId: credentials.id } });
+  if (!task) {
+    return next(newErrorCreator("Task doesn't exists", 404));
   }
-  res.status(404).json({ status: "Task not found" });
+  return res.status(200).json(task);  
 });
 
-const updateTask = controllerWrapper(async (req, res) => {
-  const something = req.headers['token'];
-  const user = jwt.verify(something, 'shasha');
-  const foundTask = await taskModel.findOne({ where: { id: +req.params.id, UserId: user.id } });
-  if (foundTask) {
-    foundTask.task = req.body.task;
-    await foundTask.save();
-    res
-      .status(201)
-      .json({ task: foundTask.id, status: "UPDATED SUCCESSFULLY" });
-    return;
+const updateTask = controllerWrapper(async (req, res, next) => {
+  const token = req.headers['token'];
+  const credentials = verifyToken(token, next);
+  const foundTask = await taskModel.findOne({ where: { id: +req.params.id, UserId: credentials.id } });
+  if (!foundTask) {
+    return next(newErrorCreator("Task doesn't exists", 400));
   }
-  res.status(404).json({ status: "Task not found" });
+  foundTask.task = req.body.task;
+  await foundTask.save();
+  res
+    .status(201)
+    .json({ task: foundTask.id, status: "UPDATED SUCCESSFULLY" });
+  return;
+  
 });
 
-const deleteTask = controllerWrapper(async (req, res) => {
-  const something = req.headers['token'];
-  const user = jwt.verify(something, 'shasha');
-  const task = await taskModel.findOne({ where: { id: +req.params.id, UserId: user.id } });
-  if (task) {
-    await taskModel.destroy({ where: { id: +req.params.id } });
-    res
-      .status(201)
-      .json({ task: req.params.id, status: "REMOVED SUCCESSFULLY" });
-    return;
+const deleteTask = controllerWrapper(async (req, res, next) => {  
+  const token = req.headers['token'];
+  const credentials = verifyToken(token, next)
+  const task = await taskModel.findOne({ where: { id: req.params.id, UserId: credentials.id } });
+  if (!task) {
+    return next(newErrorCreator('Task not found', 404));
   }
-  res.status(404).json({ status: "Task not found" });
+  await taskModel.destroy({ where: { id: req.params.id } });
+  res
+    .status(201)
+    .json({ task: req.params.id, status: "REMOVED SUCCESSFULLY" });
+  return;  
 });
 
 module.exports = {

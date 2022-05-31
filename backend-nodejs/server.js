@@ -4,19 +4,20 @@ const taskRoutes = require('./routes/tasks/routes.js');
 const userRoutes = require('./routes/users/routes.js');
 const { connectDB } = require('./Database/connect.js');
 const notFound = require('./middleware/notFound');
-const errorHandler = require('./helpers/errorHandler');
+const errorHandler = require('./middleware/errorHandler');
 require('dotenv').config();
 
 const PORT = process.env.BACKEND_PORT || 3000;
 
-//Middleware
-
-server.use(express.json());
 
 // Routes
 
+server.use(express.json());
 server.use('/api/v1/tasks', taskRoutes);
 server.use('/api/v1/users', userRoutes);
+
+//Middleware
+
 server.use(notFound);
 server.use(errorHandler)
 

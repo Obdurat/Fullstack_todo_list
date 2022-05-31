@@ -15,7 +15,7 @@ const taskModel = sequelize.define('Task', {
         allowNull: false,
         unique: true,
         validate: {
-            is: /^[a-zA-Z0-9_.-]*$/
+            is: /^[ a-zA-Z0-9_.-]*$/
         }
     },
     completed: {
