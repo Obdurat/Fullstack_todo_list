@@ -35,7 +35,7 @@ const getTask = controllerWrapper(async (req, res, next) => {
 const updateTask = controllerWrapper(async (req, res, next) => {
   const token = req.headers['token'];
   const credentials = verifyToken(token, next);
-  const foundTask = await taskModel.findOne({ where: { id: +req.params.id, UserId: credentials.id } });
+  const foundTask = await taskModel.findOne({ where: { id: req.params.id, UserId: credentials.id } });
   if (!foundTask) {
     return next(newErrorCreator("Task doesn't exists", 400));
   }
