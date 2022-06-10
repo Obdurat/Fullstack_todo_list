@@ -1,13 +1,13 @@
 import React from "react";
 import { Route, Routes as Switch } from 'react-router-dom';
-import Login from '../Pages/LogIn/Login'
-import Task from "../Pages/Task/Task";
+import { Login, Profile, Task } from "../Pages";
 
 const Routes = () => {
   return (
     <Switch>
       <Route path="/" element={<Login />} />
       <Route path="/task" element={<Task />} />
+      <Route path="/profile" element={<Profile />} />
     </Switch>
   );
 };
