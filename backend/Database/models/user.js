@@ -13,7 +13,6 @@ const userModel = sequelize.define('User', {
     firstName: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
             notEmpty: true,           
             is: /^[a-zA-Z]*$/

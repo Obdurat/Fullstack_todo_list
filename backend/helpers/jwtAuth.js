@@ -6,7 +6,7 @@ const verifyToken = (token, next) => {
         const credentials = jwt.verify(token, process.env.JWT_SECRET);
         return credentials;
     } catch (error) {
-        next(newErrorCreator('Wrong Credentials', 401));
+        return next(newErrorCreator('Wrong Credentials', 401));
     }
 }
 

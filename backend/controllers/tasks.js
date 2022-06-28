@@ -4,10 +4,12 @@ const verifyToken = require('../helpers/jwtAuth');
 const { newErrorCreator } = require('../errors/customError');
 
 const allTasks = controllerWrapper(async (req, res, next) => {
-  const token = req.headers['token'];
-  const credentials = verifyToken(token, next)  
-  const tasks = await taskModel.findAll({attributes: { exclude: ['UserId'] }, where: { UserId: credentials.id } });
-  res.json(tasks);
+  setTimeout(async () => {
+    const token = req.headers['token'];
+    const credentials = await verifyToken(token, next);
+    const tasks = await taskModel.findAll({attributes: { exclude: ['UserId'] }, where: { UserId: credentials.id } });
+    res.json(tasks);
+  }, 5000);
 });
 
 const addTask = controllerWrapper(async (req, res, next) => {
@@ -40,6 +42,7 @@ const updateTask = controllerWrapper(async (req, res, next) => {
     return next(newErrorCreator("Task doesn't exists", 400));
   }
   foundTask.task = req.body.task;
+  foundTask.completed = req.body.completed;
   await foundTask.save();
   res
     .status(201)
