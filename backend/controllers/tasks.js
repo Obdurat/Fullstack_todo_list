@@ -45,8 +45,7 @@ const updateTask = controllerWrapper(async (req, res, next) => {
   res
     .status(201)
     .json({ task: foundTask.id, status: "UPDATED SUCCESSFULLY" });
-  return;
-  
+  return;  
 });
 
 const deleteTask = controllerWrapper(async (req, res, next) => {  

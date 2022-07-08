@@ -22,15 +22,15 @@ server.use('/api/v1/users', userRoutes);
 
 //Middleware
 
-server.use(notFound);
 server.use(errorHandler)
+server.use(notFound);
 
 //DB
 
 const start = async () => {
     try {
         await connectDB()
-        server.listen(PORT, async () => console.log(`Back-end Running at ${PORT}, DB connection estabilished`));
+        server.listen(PORT, () => console.log(`Back-end Running at ${PORT}, DB connection estabilished`));
     } catch (error) {
         console.log(error);
     }
