@@ -6,9 +6,10 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
+import Alert from "@mui/material/Alert";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import MenuAppBar from "../../Components/header";
 
 const validationSchema = yup.object({
   firstName: yup
@@ -52,72 +53,81 @@ const CreateUser = () => {
   });
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box sx={sx} component="form" onSubmit={formik.handleSubmit}>
-        <TextField
-          id="firstName"
-          label="First Name"
-          variant="standard"
-          margin="dense"
-          required
-          fullWidth
-          onChange={formik.handleChange}
-          value={formik.values.firstName}
-          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-          helperText={formik.touched.firstName && formik.errors.firstName}
-        />
-        <TextField
-          id="lastName"
-          label="Last Name"
-          required
-          fullWidth
-          variant="standard"
-          margin="dense"
-          onChange={formik.handleChange}
-          value={formik.values.lastName}
-          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-          helperText={formik.touched.lastName && formik.errors.lastName}
-        />
-        <TextField
-          id="email"
-          label="Email"
-          required
-          fullWidth
-          variant="standard"
-          margin="dense"
-          onChange={formik.handleChange}
-          value={formik.values.email}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-        />
-        <TextField
-          id="password"
-          label="Password"
-          variant="standard"
-          required
-          fullWidth
-          margin="dense"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-          error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-        />
-        <Grid container sx={{ mt: 3, alignItems: 'flex-end' }}>
-          <Grid item xs>
-            <Button type="submit" variant="contained">
-              Create Account
-            </Button>
+    <>
+      <MenuAppBar />
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box sx={sx} component="form" onSubmit={formik.handleSubmit}>
+          <TextField
+            id="firstName"
+            label="First Name"
+            variant="standard"
+            margin="dense"
+            required
+            fullWidth
+            onChange={formik.handleChange}
+            value={formik.values.firstName}
+            error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+            helperText={formik.touched.firstName && formik.errors.firstName}
+          />
+          <TextField
+            id="lastName"
+            label="Last Name"
+            required
+            fullWidth
+            variant="standard"
+            margin="dense"
+            onChange={formik.handleChange}
+            value={formik.values.lastName}
+            error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+            helperText={formik.touched.lastName && formik.errors.lastName}
+          />
+          <TextField
+            id="email"
+            label="Email"
+            required
+            fullWidth
+            variant="standard"
+            margin="dense"
+            onChange={formik.handleChange}
+            value={formik.values.email}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
+          <TextField
+            id="password"
+            label="Password"
+            variant="standard"
+            required
+            fullWidth
+            margin="dense"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+          />
+          <Grid container sx={{ mt: 3, alignItems: "flex-end" }}>
+            <Grid item xs>
+              <Button type="submit" variant="contained">
+                Create Account
+              </Button>
+            </Grid>
+            <Grid item>
+              <Link href="/login" variant="body2">
+                Allready have an Account ? Login
+              </Link>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Link href="/" variant="body2">
-              Allready have an Account ? Login
-            </Link>
+          <Grid>
+            {status.message !== "" && (
+              <Alert severity="info" sx={{ mt: 5 }}>
+                {status.message}
+              </Alert>
+            )}
           </Grid>
-        </Grid>
-        <Grid>{status !== "" && <Typography variant="h5" color="red" sx={{ mt: 5 }}>{status.message}</Typography>}</Grid>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </>
   );
 };
 

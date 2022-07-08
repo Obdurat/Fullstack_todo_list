@@ -7,8 +7,12 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import MenuAppBar from "../../Components/header";
+import { useAuth } from "../../Context/Auth";
+import Container from "@mui/material/Container";
 
 const Task = () => {
+  const auth = useAuth();
   const [tasks, setTasks] = useState();
   const [isOpen, setIsOpen] = useState({ status: false, edit: false });
   const [eventCounter, setEventCounter] = useState(0);
@@ -20,70 +24,71 @@ const Task = () => {
   return (
     <>
       <div>
+        <MenuAppBar />
+        {console.log(auth)}
         {tasks ? (
-          <div>
-            {tasks.map((t) => (
-              <Paper
-                id={t.id}
-                elevation={2}
-                sx={{
-                  verticalAlign: "middle",
-                  flexDirection: "row",
-                }}
-                key={t.id}
-              >
-                <Grid container>
-                  <Grid item>
-                    <Button
-                      color={t.completed ? "success" : "error"}
-                      onClick={() => {
-                        const { id, task, completed } = t;
-                        const body = { task, completed: !completed };
-                        updateTaskHandler(
-                          id,
-                          body,
-                          setEventCounter,
-                          eventCounter
-                        );
-                      }}
-                    >
-                      <CheckRoundedIcon />
-                    </Button>
+          <Container sx={{ marginTop: 5 }}>
+            {tasks.map((t, index) => (              
+                <Paper
+                  id={t.id}
+                  elevation={8}
+                  sx={{
+                    flexDirection: "row",
+                    mb: 2,
+                  }}
+                  key={t.id}
+                >
+                  <Grid container sx={{ alignItems: "center" }}>
+                    <Grid item>
+                      <Button
+                        color={t.completed ? "success" : "error"}
+                        onClick={() => {
+                          const { id, task, completed } = t;
+                          const body = { task, completed: !completed };
+                          updateTaskHandler(
+                            id,
+                            body,
+                            setEventCounter,
+                            eventCounter
+                          );
+                        }}
+                      >
+                        <CheckRoundedIcon />
+                      </Button>
+                    </Grid>
+                    <Grid item xs >
+                      <Typography >{t.task}</Typography>
+                    </Grid>
+                    <Grid item >
+                      <Button
+                        onClick={() =>
+                          setIsOpen({
+                            status: true,
+                            edit: {
+                              id: t.id,
+                              task: t.task,
+                              completed: t.completed,
+                              callback: setEventCounter,
+                              counter: eventCounter,
+                            },
+                          })
+                        }
+                      >
+                        <EditRoundedIcon />
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          deleteTaskHandler(t.id, setEventCounter, eventCounter)
+                        }
+                      >
+                        <DeleteForeverRoundedIcon />
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item sx={{ verticalAlign: "middle" }}>
-                    <Typography sx={{ mb: 2 }}>{t.task}</Typography>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={() =>
-                        setIsOpen({
-                          status: true,
-                          edit: {
-                            id: t.id,
-                            task: t.task,
-                            completed: t.completed,
-                            callback: setEventCounter,
-                            counter: eventCounter,
-                          },
-                        })
-                      }
-                    >
-                      <EditRoundedIcon />
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={() =>
-                        deleteTaskHandler(t.id, setEventCounter, eventCounter)
-                      }
-                    >
-                      <DeleteForeverRoundedIcon />
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Paper>
+                </Paper>
+
             ))}
-          </div>
+          </Container>
         ) : (
           <Stack spacing={0}>
             <Skeleton animation="wave" height={50} />

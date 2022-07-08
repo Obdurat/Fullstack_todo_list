@@ -1,23 +1,21 @@
 const taskModel = require("../Database/models/task");
 const controllerWrapper = require("../middleware/async");
 const verifyToken = require('../helpers/jwtAuth');
-const { newErrorCreator } = require('../errors/customError');
+const { newErrorCreator, newError } = require('../errors/customError');
 
 const allTasks = controllerWrapper(async (req, res, next) => {
-  setTimeout(async () => {
     const token = req.headers['token'];
     const credentials = await verifyToken(token, next);
     const tasks = await taskModel.findAll({attributes: { exclude: ['UserId'] }, where: { UserId: credentials.id } });
     res.json(tasks);
-  }, 5000);
 });
 
 const addTask = controllerWrapper(async (req, res, next) => {
   const token = req.headers['token'];
   const credentials = verifyToken(token, next);  
   const task = await taskModel.findOne({ where: { task: req.body.task, UserId: credentials.id } });
-  if (task) {    
-    return next(newErrorCreator('Task already exists', 400));
+  if (task) {
+    throw new newError('Task already exists', 400);
   }
   const newTask = taskModel.build({...req.body, UserId: credentials.id });  
   await newTask.save();

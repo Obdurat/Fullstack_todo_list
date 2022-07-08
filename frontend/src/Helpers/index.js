@@ -11,7 +11,15 @@ export const createAccountRequest = async (obj) => {
 };
 
 export const loginUser = async (obj) => {
+    console.log(obj);
     return axios.post('http://localhost:4000/api/v1/users/login', obj)
+    .then((response) => response.data);
+};
+
+export const getUser = async () => {
+    const token = sessionStorage.getItem('userToken');
+    console.log(token);
+    return axios.get('http://localhost:4000/api/v1/users/profile', { headers: { token: token }} )
     .then((response) => response.data);
 };
 
@@ -39,14 +47,32 @@ export const deleteTask = async (id) => {
     .then((response) => response.data);
 };
 
+export const updateUser = async (payload) => {
+    const token = sessionStorage.getItem('userToken');
+    console.log(token);
+    return axios.patch(`http://localhost:4000/api/v1/users/profile/`, payload, { headers: { 'token': token }})
+    .then((response) => response.data);
+};
 
-export const loginHandler = async (obj, navigate, errorCallback) => {
+
+export const loginHandler = async (obj, navigate, errorCallback, auth) => {
     try {
         const request = await loginUser(obj);
         sessionStorage.setItem('userToken', request.userToken);
+        auth.setLogedIn({ logedIn: true, user: request.user });
         return navigate('/task');
     } catch (err) {
+        console.log(err)
         errorCallback({ message: err.response.data.message });
+    }
+};
+
+export const profileHandler = async () => {
+    try {
+        const request = await getUser();
+        return request;
+    } catch (err) {
+        console.log(err);
     }
 };
 
@@ -54,7 +80,7 @@ export const registerHandler = async (obj, navigate, statusCallback) => {
     try {
         const request = await createAccountRequest(obj);
         statusCallback({ message: await request.status });
-        setTimeout(() => navigate('/'), 1000);
+        // setTimeout(() => navigate('/'), 1000);
     } catch (err) {
         statusCallback({ message: err.response.data.message });
     }
@@ -75,6 +101,17 @@ export const deleteTaskHandler = async (id, callback, counter) => {
         callback(++counter);
     } catch (err) {
         console.log(err); 
+    }
+};
+
+export const updateUserHandler = async (payload, callback) => {
+    try {
+        const request = await updateUser(payload);
+        console.log(request);
+        return callback(request.status);
+    } catch (err) {
+        console.log(err)
+        callback(err.message);
     }
 };
 

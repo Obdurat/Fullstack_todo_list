@@ -13,7 +13,10 @@ export const ModalComponent = (props) => {
   } = props;
   const [task, setTask] = useState({ task: "" });
   const handleOpen = () => setIsOpen({ status: true, edit });
-  const handleClose = () => setIsOpen({ status: false, edit: false });
+  const handleClose = () => {
+    setTask({ task: "" });
+    setIsOpen({ status: false, edit: false });
+  };
 
   const style = {
     position: "absolute",
@@ -34,9 +37,9 @@ export const ModalComponent = (props) => {
         color="primary"
         onClick={handleOpen}
         size="large"
-        sx={{ position: "absolute", bottom: "10px", right: "10px" }}
+        sx={{ position: "fixed", bottom: "10px", right: "20px" }}
       >
-        <AddCircleRoundedIcon fontSize="large" />
+        <AddCircleRoundedIcon fontSize="large" sx={{ width: "50px", height: "50px" }} />
       </IconButton>
 
       <Modal open={status} onClose={handleClose}>
@@ -46,7 +49,7 @@ export const ModalComponent = (props) => {
             id="modal-modal-title"
             sx={{ textAlign: "center" }}
           >
-            Add Task
+            {edit ? 'Edit Task' : 'Add Task'}
           </Typography>
           <Box
             id="modal-modal-description"

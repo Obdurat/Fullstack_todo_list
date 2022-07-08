@@ -5,7 +5,8 @@ const {
     addUser,     
     updateUser, 
     deleteUser,
-    loginUser
+    loginUser,
+    getUser
 } = require('../../controllers/users')
 
 Router.route('/register')    
@@ -14,7 +15,8 @@ Router.route('/register')
 Router.route('/login')
     .post(loginUser);
 
-Router.route('/profile')    
+Router.route('/profile')
+    .get(getUser)
     .patch(updateUser)
     .delete(deleteUser);
 
