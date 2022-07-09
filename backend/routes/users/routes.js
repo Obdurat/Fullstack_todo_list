@@ -7,7 +7,7 @@ const {
     deleteUser,
     loginUser,
     getUser
-} = require('../../controllers/users')
+} = require('../../Controllers/users')
 
 Router.route('/register')    
     .post(addUser);

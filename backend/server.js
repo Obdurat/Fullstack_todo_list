@@ -7,6 +7,8 @@ const notFound = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors');
 require('dotenv').config();
+const userModel = require('./Database/models/user');
+const taskModel = require('./Database/models/task');
 
 const PORT = process.env.BACKEND_PORT || 3000;
 
@@ -30,6 +32,8 @@ server.use(notFound);
 const start = async () => {
     try {
         await connectDB()
+        await userModel.sync();
+        await taskModel.sync();
         server.listen(PORT, () => console.log(`Back-end Running at ${PORT}, DB connection estabilished`));
     } catch (error) {
         console.log(error);

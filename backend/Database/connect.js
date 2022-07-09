@@ -11,7 +11,9 @@ const sequelize = new Sequelize({
 });
 
 const connectDB = async () => {
-    await sequelize.authenticate();    
+    await sequelize.authenticate();
+    await sequelize.query('CREATE SCHEMA IF NOT EXISTS todo_db');
+    await sequelize.query('USE todo_db');
 }
 
 module.exports = {connectDB, sequelize};

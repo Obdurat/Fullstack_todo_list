@@ -1,8 +1,9 @@
 const { sequelize } = require("../connect");
 const { DataTypes } = require("sequelize");
-const { newError, newErrorCreator } = require("../../errors/customError");
+const { CustomError } = require("../../errors/customError");
 
-const URLREGEXP = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
+const URLREGEXP =
+  /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
 
 const userModel = sequelize.define("User", {
   id: {
@@ -17,9 +18,9 @@ const userModel = sequelize.define("User", {
     allowNull: false,
     validate: {
       checkFirstName(value) {
-        if (!value) throw new newError("First name is required", 400);
+        if (!value) throw new CustomError("First name is required", 400);
         if (!value.match(/[a-zA-Z]/))
-          throw new newError("Only letters are allowed as First Name", 400);
+          throw new CustomError("Only letters are allowed as First Name", 400);
       },
     },
   },
@@ -28,9 +29,9 @@ const userModel = sequelize.define("User", {
     allowNull: false,
     validate: {
       checkLastName(value) {
-        if (!value) throw new newError("Last name is required", 400);
-        if (!value.match(/[a-zA-Z]/))
-          throw new newError("Only letters are allowed as Last Name", 400);
+        if (!value) throw new CustomError("Last name is required", 400);
+        if (value.match(/[\W]/g))
+          throw new CustomError("Only letters are allowed as Last Name", 400);
       },
     },
   },
@@ -40,9 +41,10 @@ const userModel = sequelize.define("User", {
     unique: true,
     validate: {
       checkEmail(value) {
-        if (!value) throw newError("Email is required", 400);
-        if (!value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) throw new newError("Invalid Email", 400);
-      }
+        if (!value) throw CustomError("Email is required", 400);
+        if (!value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g))
+          throw new CustomError("Invalid Email", 400);
+      },
     },
   },
   password: {
@@ -56,13 +58,9 @@ const userModel = sequelize.define("User", {
     type: DataTypes.CHAR,
     allowNull: true,
     validate: {
-      checkAvatar(value) {
-        if (!value.match(URLREGEXP)) throw new newError('Avatar must be a valid URL');
-      }
+      isUrl: true,
     },
   },
 });
-
-userModel.sync();
 
 module.exports = userModel;
