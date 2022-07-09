@@ -7,7 +7,9 @@ const {
     updateUser, 
     deleteUser,
     loginUser,
-    getUser
+    getUser,
+    forgotPassword,
+    resetPassword,
 } = require('../../Controllers/users')
 
 Router.route('/register')    
@@ -20,5 +22,9 @@ Router.route('/profile')
     .get(jwtAuth, getUser)
     .patch(jwtAuth, updateUser)
     .delete(jwtAuth, deleteUser);
+
+Router.route('/forgotpassword')
+    .post(forgotPassword)
+    .patch(jwtAuth, resetPassword);
 
 module.exports = Router

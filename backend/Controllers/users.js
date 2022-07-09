@@ -32,10 +32,22 @@ const deleteUser = controllerWrapper(async (req, res, next) => {
     res.json({ status: 'User Deleted !!!'});
 });
 
+const forgotPassword = controllerWrapper(async (req, res) => {
+    await UserServices.forgotPassword(req.body);
+    res.json({ status: 'Email sent successfully'});
+});
+
+const resetPassword = controllerWrapper(async (req, res) => {
+    const status = await UserServices.resetPassword(req.credentials, req.body);
+    res.json(status);
+});
+
 module.exports = {
     addUser,
     updateUser,
     deleteUser,
     loginUser,
     getUser,
+    forgotPassword,
+    resetPassword,
 }
