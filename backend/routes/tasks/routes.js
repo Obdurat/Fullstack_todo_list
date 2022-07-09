@@ -1,5 +1,6 @@
 const express = require('express');
 const Router = express.Router();
+const jwtAuth = require('../../middleware/jwtAuth');
 
 const { 
     allTasks, 
@@ -10,12 +11,12 @@ const {
 } = require('../../Controllers/tasks');
 
 Router.route('/')
-    .get(allTasks)
-    .post(addTask);
+    .get(jwtAuth, allTasks)
+    .post(jwtAuth, addTask);
 
 Router.route('/:id')
-    .get(getTask)
-    .patch(updateTask)
-    .delete(deleteTask);
+    .get(jwtAuth, getTask)
+    .patch(jwtAuth, updateTask)
+    .delete(jwtAuth, deleteTask);
 
 module.exports = Router

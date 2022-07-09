@@ -1,5 +1,4 @@
 const controllerWrapper = require("../middleware/async");
-const verifyToken = require('../helpers/jwtAuth');
 const jwt = require('jsonwebtoken');
 const UserServices = require('../Services/UserServices');
 
@@ -16,22 +15,19 @@ const loginUser = controllerWrapper(async (req, res) => {
 });
 
 const getUser = controllerWrapper(async (req, res, next) => {
-    const token = req.headers['token'];
-    const credentials = await verifyToken(token, next);
+    const credentials = req.credentials;
     const user = await UserServices.getUser(credentials);
     return res.json(user);
 });
 
 const updateUser = controllerWrapper(async (req, res, next) => {
-    const token = req.headers['token'];
-    const credentials = verifyToken(token, next);
+    const credentials = req.credentials;
     await UserServices.updateUser(credentials, req.body);
     res.json({ status: 'User Updated !!!'});
 });
 
 const deleteUser = controllerWrapper(async (req, res, next) => {
-    const token = req.headers['token'];
-    const credentials = verifyToken(token, next);
+    const credentials = req.credentials;
     await UserServices.deleteUser(credentials);
     res.json({ status: 'User Deleted !!!'});
 });
