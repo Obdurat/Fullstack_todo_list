@@ -1,8 +1,8 @@
-const taskModel = require("../../Database/models/task");
+const Models = require("../../Database/models/");
 const { CustomError } = require("../../errors/customError");
 
 const updateTask = async (credentials, id, body) => {
-  const foundTask = await taskModel.findOne({
+  const foundTask = await Models.Task.findOne({
     where: {
       id: id,
       UserId: credentials.id,

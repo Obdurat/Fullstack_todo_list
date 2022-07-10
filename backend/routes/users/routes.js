@@ -1,6 +1,7 @@
 const express = require('express');
 const Router = express.Router();
 const jwtAuth = require('../../middleware/jwtAuth');
+const usersReqValidations = require('../../middleware/Joi_Validations/User_req');
 
 const {    
     addUser,     
@@ -13,18 +14,18 @@ const {
 } = require('../../Controllers/users')
 
 Router.route('/register')    
-    .post(addUser);
+    .post(usersReqValidations.registerValidation, addUser);
 
 Router.route('/login')
-    .post(loginUser);
+    .post(usersReqValidations.loginValidation, loginUser);
 
 Router.route('/profile')
     .get(jwtAuth, getUser)
-    .patch(jwtAuth, updateUser)
+    .patch(usersReqValidations.updateValidation ,jwtAuth, updateUser)
     .delete(jwtAuth, deleteUser);
 
 Router.route('/forgotpassword')
-    .post(forgotPassword)
-    .patch(jwtAuth, resetPassword);
+    .post(usersReqValidations.forgotPassValidation ,forgotPassword)
+    .patch(usersReqValidations.resetPassValidation ,jwtAuth, resetPassword);
 
 module.exports = Router

@@ -1,0 +1,21 @@
+const Joi = require("joi");
+
+const resetPassSchema = Joi.object({  
+  password: Joi.string().min(8).max(100).required()
+  .messages({
+    'any.required': 'Password is required',
+    'string.min': 'Password must be at least 8 characters long',
+    'string.max': 'Password must be at most 100 characters long',
+  }),
+});
+
+const resetPassValidation = (req, res, next) => {
+    const { error } = resetPassSchema.validate(req.body);
+    if (error) {
+        const message = error.details[0].message.includes('allowed') ? 'Bad request' : error.details[0].message;
+        return res.status(400).json({ message: message });
+    }
+    return next();
+};
+
+module.exports = resetPassValidation;

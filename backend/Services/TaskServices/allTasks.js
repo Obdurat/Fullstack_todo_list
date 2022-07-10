@@ -1,8 +1,8 @@
-const taskModel = require('../../Database/models/task');
 const { CustomError } = require('../../errors/customError');
+const Models = require('../../Database/models');
 
 const allTasks = async (credentials) => {
-    const tasks = await taskModel.findAll({
+    const tasks = await Models.Task.findAll({
         attributes: {
             exclude: ['UserId']
         },

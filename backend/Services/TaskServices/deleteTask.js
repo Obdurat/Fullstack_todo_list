@@ -1,8 +1,8 @@
-const taskModel = require("../../Database/models/task");
+const Models = require("../../Database/models/");
 const { CustomError } = require("../../errors/customError");
 
 const deleteTask = async (credentials, id) => {
-  const task = await taskModel.findOne({
+  const task = await Models.Task.findOne({
     where: { id: id, UserId: credentials.id },
   });
   if (!task) throw new CustomError("Task not found", 404);
