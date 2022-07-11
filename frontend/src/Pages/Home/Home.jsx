@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
@@ -27,14 +27,7 @@ const Home = () => {
   return (
     <>
       <MenuAppBar />
-      <Box>
-        <Typography
-          variant="h4"
-          sx={{ position: "absolute", top: 150, left: 160 }}
-          color="white"
-        >
-          Fullstack Todo List
-        </Typography>
+      <Box >        
         <Particles
           id="tsparticles"
           init={particlesInit}
@@ -115,11 +108,18 @@ const Home = () => {
             detectRetina: true,
           }}
         />
+        <Typography
+          variant="h4"
+          sx={{ position: "absolute", top: 160, left: 100, fontSize: '6vw' }}
+          color="white"
+        >
+          Fullstack Todo List
+        </Typography>
       </Box>
       <Grid
         container
         sx={{
-          marginTop: 1,
+          marginTop: 0,
           justifyContent: "space-around",
           textAlign: "center",
         }}
@@ -158,19 +158,16 @@ const Home = () => {
           </p>
         </Grid>
       </Grid>
-      <Button
-        variant="contained"
-        sx={{
-          borderRadius: 2,
-          position: "absolute",
-          bottom: 10,
-          left: "45vw",
-          right: "45vw",
-        }}
-        onClick={() => {auth.logedIn.logedIn ? navigate("/task") : navigate('/login')}}
-      >
-        {auth.logedIn.logedIn ? 'Continue your tasks' : 'Get started !'}
-      </Button>
+      <Container xs sx={{ display: 'flex' ,justifyContent: 'center', marginTop: 8 }}>
+        <Button          
+          variant="contained"
+          onClick={() => {
+            auth.logedIn.logedIn ? navigate("/task") : navigate("/login");
+          }}
+        >
+          {auth.logedIn.logedIn ? "Continue your tasks" : "Get started !"}
+        </Button>
+      </Container>
     </>
   );
 };

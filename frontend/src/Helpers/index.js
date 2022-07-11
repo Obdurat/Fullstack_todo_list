@@ -11,14 +11,12 @@ export const createAccountRequest = async (obj) => {
 };
 
 export const loginUser = async (obj) => {
-    console.log(obj);
     return axios.post('http://localhost:4000/api/v1/users/login', obj)
     .then((response) => response.data);
 };
 
 export const getUser = async () => {
     const token = sessionStorage.getItem('userToken');
-    console.log(token);
     return axios.get('http://localhost:4000/api/v1/users/profile', { headers: { token: token }} )
     .then((response) => response.data);
 };
@@ -49,8 +47,12 @@ export const deleteTask = async (id) => {
 
 export const updateUser = async (payload) => {
     const token = sessionStorage.getItem('userToken');
-    console.log(token);
     return axios.patch(`http://localhost:4000/api/v1/users/profile/`, payload, { headers: { 'token': token }})
+    .then((response) => response.data);
+};
+
+export const forgotPasswordRequest = async (email) => {
+    return axios.post(`http://localhost:4000/api/v1/users/forgotpassword`, email)
     .then((response) => response.data);
 };
 
@@ -62,7 +64,6 @@ export const loginHandler = async (obj, navigate, errorCallback, auth) => {
         auth.setLogedIn({ logedIn: true, user: request.user });
         return navigate('/task');
     } catch (err) {
-        console.log(err)
         errorCallback({ message: err.response.data.message });
     }
 };
@@ -72,7 +73,7 @@ export const profileHandler = async () => {
         const request = await getUser();
         return request;
     } catch (err) {
-        console.log(err);
+        console.log(err.response.data.message);
     }
 };
 
@@ -80,7 +81,7 @@ export const registerHandler = async (obj, navigate, statusCallback) => {
     try {
         const request = await createAccountRequest(obj);
         statusCallback({ message: await request.status });
-        // setTimeout(() => navigate('/'), 1000);
+        setTimeout(() => navigate('/login'), 1000);
     } catch (err) {
         statusCallback({ message: err.response.data.message });
     }
@@ -91,7 +92,7 @@ export const updateTaskHandler = async (id, obj, callback, counter) => {
         await updateTask(id, obj);
         callback(++counter);
     } catch (err) {
-        console.log(err); 
+        console.log(err.response.data.message); 
     }
 };
 
@@ -100,7 +101,7 @@ export const deleteTaskHandler = async (id, callback, counter) => {
         await deleteTask(id);
         callback(++counter);
     } catch (err) {
-        console.log(err); 
+        console.log(err.response.data.message); 
     }
 };
 
@@ -111,7 +112,18 @@ export const updateUserHandler = async (payload, callback) => {
         return callback(request.status);
     } catch (err) {
         console.log(err)
-        callback(err.message);
+        callback(err.response.data.message);
     }
 };
 
+export const forgotPasswordHandler = async (email, [setStatus, setError, setLoading]) => {
+    try {
+        setLoading(true);
+        const request = await forgotPasswordRequest(email);
+        setLoading(false);
+        setStatus(request.status);
+    } catch (err) {
+        setError(err.response.data.message);
+        setLoading(false);
+    }
+};

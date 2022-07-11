@@ -22,9 +22,7 @@ const validationSchema = yup.object({
     .string("Enter your email address")
     .email("Enter a valid email address")
     .required("Email is required"),
-  avatar: yup
-  .string('Enter your avatar URL')
-  .url('Enter a valid URL'),
+  avatar: yup.string("Enter your avatar URL").url("Enter a valid URL"),
 });
 
 const Profile = () => {
@@ -42,12 +40,18 @@ const Profile = () => {
   return (
     <div>
       <MenuAppBar />
-      <Container component="main" maxWidth="xs" sx={{ marginTop: 5 }}>
-        <Avatar
-          alt="User Image"
-          src={formik.values.avatar}
-          sx={{ width: 130, height: 130, position: "relative", left: 150 }}
-        />
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{ marginTop: 5, justifyContent: "center" }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Avatar
+            alt="User Image"
+            src={formik.values.avatar}
+            sx={{ width: 130, height: 130 }}
+          />
+        </Box>
         <Box component="form" onSubmit={formik.handleSubmit}>
           {Object.keys(auth.logedIn.user).map((field) => (
             <TextField
@@ -70,11 +74,20 @@ const Profile = () => {
               }
             />
           ))}
-          <Button type="submit" variant="contained">
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{ marginTop: 2 }}
+          >
             Update
           </Button>
         </Box>
-        {status && <Alert severity="info" sx={{ marginTop: 2 }}>{status + ' Login again to see the changes'}</Alert>}
+        {status && (
+          <Alert severity="info" sx={{ marginTop: 2 }}>
+            {status + " Login again to see the changes"}
+          </Alert>
+        )}
       </Container>
     </div>
   );

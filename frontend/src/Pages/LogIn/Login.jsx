@@ -54,7 +54,6 @@ const Login = () => {
       <MenuAppBar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        {console.log(auth)}
         <Box sx={sx} component="form" onSubmit={formik.handleSubmit}>
           <TextField
             id="email"
@@ -91,7 +90,7 @@ const Login = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href="/forgotpass" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
