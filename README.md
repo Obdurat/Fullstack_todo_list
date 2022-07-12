@@ -26,17 +26,17 @@ A pasta Raiz do projeto e a pasta backend tem arquivos .env, Faça a ultilizaç�
   ```docker-compose up -d```<br />
 
   Agora foram criados os containers da API e do Banco de dados !
-  Logo em seguida é nescessário rodar os seguintes commandos
+  Logo em seguida é nescessário rodar os seguintes comandos
 
   ```docker exec -it fullstack_todo_api sh```<br />
 
-  Esse commando irá lhe colocar dentro do container da api
+  Esse comando irá lhe colocar dentro do container da api.<br />
   Dentro do container da API execute os comandos
 
   ```npx sequelize-cli db:migrate```<br />
   ```npx sequelize-cli db:seed:all```<br />
 
-  Execute um de cada vez. (Nota: commandos npx podem demorar na primeira vez que vc cria o container pos ele irá instalar o npx dentro do container)
+  Execute um de cada vez. (Nota: commandos npx podem demorar na primeira vez que vc cria o container pos ele irá instalar o npx dentro do container)<br />
   Logo após ainda dentro do container da API você tem 2 opções 
 
   ```npm run prod```<br />
@@ -100,13 +100,13 @@ A pasta Raiz do projeto e a pasta backend tem arquivos .env, Faça a ultilizaç�
 
   A senha desses usúarios é 12345678 para todos eles.<br />
   
-  Para um reset total desses usúarios vc precisa entrar no caontainer da API.<br />
+  Para um reset total desses usúarios vc precisa entrar no container da API.<br />
 
   ```docker exec -it fullstack_todo_api sh```
 
   E executar os seguintes comandos:<br />
 
-  ```npx sequelize-cli db:seed:undo:all```
+  ```npx sequelize-cli db:seed:undo:all```<br />
   ```npx sequelize-cli db:seed:all```
 
   <br />
