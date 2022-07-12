@@ -4,7 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from '@mui/material/IconButton';
 
 const SnackBar = (props) => {
-  const { open, message } = props.open;
+  const open = props.open;
   const setOpen = props.setOpen;
 
   const action = (
@@ -13,7 +13,7 @@ const SnackBar = (props) => {
         size="small"
         aria-label="close"
         color="inherit"
-        onClick={() => setOpen(false)}
+        onClick={() => setOpen()}
       >
         <CloseIcon fontSize="small" />
       </IconButton>
@@ -22,10 +22,10 @@ const SnackBar = (props) => {
 
   return (
     <Snackbar
-      open={open}
+      open={Boolean(open)}
       autoHideDuration={3000}
-      onClose={() => setOpen(false)}
-      message={message}
+      onClose={() => setOpen()}
+      message={open}
       action={action}
     />
   );

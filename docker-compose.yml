@@ -1,11 +1,42 @@
 version: '3'
 
 services:
+  api:
+  # Constroi imagem a partir do Docker File na pasta backend
+    build: ./backend
+    container_name: fullstack_todo_api
+    tty: true
+    stdin_open: true
+    # Diretório atual dentro do container
+    working_dir: /backend-api
+    # Copia conteudo da pasta backend local para a past backend-api no container
+    volumes:
+      - ./backend:/backend-api
+      # Nescessita que o db esteja pronto antes de subir
+    depends_on:
+      - db
+      # Portas usando as variaveis do .env
+    ports:
+      - "$BACKEND_PORT:$BACKEND_PORT"
+      # Nota: Todos os valores que começam com '$' estão ultilizando as variaveis do .env desta pasta
+    environment:
+      - "$DB_PASSWORD"
+      - "$DB_USERNAME"
+      - "$DB_HOST"
+      - "$JWT_SECRET"
+      - "$LOCAL_PORT_BINDING"
   db:
-    image: mysql:5.7
+  # Constrói a partir do Dockerfile na pasta Database
+    build: ./database
     container_name: database
     restart: always
+    tty: true
+    stdin_open: true
     ports:
       - "$LOCAL_PORT_BINDING:$DB_PORT_BINDING"
     environment:
       MYSQL_ROOT_PASSWORD: "$DB_PASSWORD"
+      # Default network para os containers se comunicarem
+networks:
+  default:
+    name: fullstack_todo_network

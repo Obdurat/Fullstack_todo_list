@@ -16,6 +16,7 @@ server.use(express.json());
 server.use(cors({
     origin: '*'
 }));
+server.use(express.static('View'));
 server.use('/api/v1/tasks', taskRoutes);
 server.use('/api/v1/users', userRoutes);
 
