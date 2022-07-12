@@ -27,10 +27,14 @@ export const getTasks = async () => {
     .then((response) => response.data);
 };
 
-export const addTask = async (task) => {
+export const addTask = async (task, setLoading) => {
+    setLoading(true);
     const token = sessionStorage.getItem('userToken');
     return axios.post('http://localhost:4000/api/v1/tasks', task, { headers: { 'token': token } })
-    .then((response) => response.data);
+    .then((response) => {
+        setLoading(false);
+        return response.data
+    });
 };
 
 export const updateTask = async (id, body) => {
@@ -56,6 +60,11 @@ export const forgotPasswordRequest = async (email) => {
     .then((response) => response.data);
 };
 
+export const resetPassRequest = async (password, token) => {
+    return axios.patch(`http://localhost:4000/api/v1/users/forgotpassword`, password, { headers: { 'token': token } })
+    .then((response) => response.data);
+};
+
 
 export const loginHandler = async (obj, navigate, errorCallback, auth) => {
     try {
@@ -77,30 +86,36 @@ export const profileHandler = async () => {
     }
 };
 
-export const registerHandler = async (obj, navigate, statusCallback) => {
+export const registerHandler = async (obj, navigate, statusCallback, errorCallback) => {
     try {
         const request = await createAccountRequest(obj);
-        statusCallback({ message: await request.status });
+        statusCallback(request.status);
         setTimeout(() => navigate('/login'), 1000);
     } catch (err) {
-        statusCallback({ message: err.response.data.message });
+        errorCallback(err.response.data.message);
     }
 };
 
-export const updateTaskHandler = async (id, obj, callback, counter) => {
+export const updateTaskHandler = async (id, obj, callback, counter, setLoading) => {
     try {
+        setLoading(true);
         await updateTask(id, obj);
         callback(++counter);
+        setLoading(false);
     } catch (err) {
+        setLoading(false);
         console.log(err.response.data.message); 
     }
 };
 
-export const deleteTaskHandler = async (id, callback, counter) => {
+export const deleteTaskHandler = async (id, callback, counter, setLoading) => {
     try {
+        setLoading(true);
         await deleteTask(id);
         callback(++counter);
+        setLoading(false);
     } catch (err) {
+        setLoading(false);
         console.log(err.response.data.message); 
     }
 };
@@ -116,14 +131,21 @@ export const updateUserHandler = async (payload, callback) => {
     }
 };
 
-export const forgotPasswordHandler = async (email, [setStatus, setError, setLoading]) => {
+export const forgotPasswordHandler = async (email, [setStatus, setError]) => {
     try {
-        setLoading(true);
         const request = await forgotPasswordRequest(email);
-        setLoading(false);
         setStatus(request.status);
     } catch (err) {
         setError(err.response.data.message);
-        setLoading(false);
+    }
+};
+
+export const resetPassHandler = async (password, token, [setStatus, setError]) => {
+    try {
+        console.log(password, token);
+        const request = await resetPassRequest({ password }, token);
+        setStatus(request.status);
+    } catch (err) {
+        setError(err.response.data.message);
     }
 };

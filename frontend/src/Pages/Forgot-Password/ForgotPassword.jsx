@@ -6,8 +6,8 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useState } from "react";
 import { forgotPasswordHandler } from "../../Helpers";
-import SendIcon from '@mui/icons-material/Send';
-import CircularProgress from '@mui/material/CircularProgress';
+import SendIcon from "@mui/icons-material/Send";
+import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 
 const sx = {
@@ -21,13 +21,12 @@ const validationSchema = yup.object({
   email: yup
     .string("Enter your email address")
     .email("Enter a valid Email address")
-    .required("Email is required"),  
+    .required("Email is required"),
 });
 
 const ForgotPass = () => {
-    const [status, setStatus] = useState();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+  const [status, setStatus] = useState();
+  const [error, setError] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -35,7 +34,7 @@ const ForgotPass = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-        return forgotPasswordHandler(values, [setStatus, setError, setLoading]);
+      return forgotPasswordHandler(values, [setStatus, setError]);
     },
   });
 
@@ -56,16 +55,25 @@ const ForgotPass = () => {
           helperText={formik.touched.email && formik.errors.email}
         />
         <Button
-            variant="contained"
-            type="submit"
-            sx={{ mt: 3, mb: 2 }}
-            fullWidth
-            startIcon={loading ? <CircularProgress sx={{ color: "white" }} size={24}/> : <SendIcon />}
-            disabled={formik.isSubmitting}
-            onClick={() => {setStatus(false); setError(false);}}
-          >
-            Send recovery mail
-          </Button>
+          variant="contained"
+          type="submit"
+          sx={{ mt: 3, mb: 2 }}
+          fullWidth
+          startIcon={
+            formik.isSubmitting ? (
+              <CircularProgress sx={{ color: "white" }} size={24} />
+            ) : (
+              <SendIcon />
+            )
+          }
+          disabled={formik.isSubmitting}
+          onClick={() => {
+            setStatus(false);
+            setError(false);
+          }}
+        >
+          Send recovery mail
+        </Button>
       </Box>
       {status && <Alert severity="info">{status}</Alert>}
       {error && <Alert severity="error">{error}</Alert>}

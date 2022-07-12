@@ -5,6 +5,8 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { onChangeFormHandler, addTask, updateTaskHandler } from "../Helpers";
+import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export const ModalComponent = (props) => {
   const {
@@ -12,6 +14,7 @@ export const ModalComponent = (props) => {
     setIsOpen,
   } = props;
   const [task, setTask] = useState({ task: "" });
+  const [loading, setLoading] = useState(false);
   const handleOpen = () => setIsOpen({ status: true, edit });
   const handleClose = () => {
     setTask({ task: "" });
@@ -78,16 +81,17 @@ export const ModalComponent = (props) => {
                 <Button
                   variant="outlined"
                   color="success"
+                  startIcon={loading ? <CircularProgress sx={{ color: "success" }} size={24}/> : <SendIcon />}
                   onClick={ async () => {
                     if (edit) {
                       await updateTaskHandler(edit.id, {
                         task: edit.task,
                         completed: edit.completed,
-                      }, edit.callback, edit.counter);
+                      }, edit.callback, edit.counter, setLoading);
                       handleClose();
                       return;
                     }
-                    await addTask(task);
+                    await addTask(task, setLoading);
                     handleClose();
                   }}
                 >

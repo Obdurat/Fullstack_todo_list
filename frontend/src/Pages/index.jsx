@@ -4,6 +4,7 @@ import Task from "./Task/Task";
 import CreateUser from "./Create-Account/createAccount";
 import Home from "./Home/Home";
 import ForgotPass from "./Forgot-Password/ForgotPassword";
+import ResetPass from "./Reset-Password/ResetPass";
 
 export {
     Profile,
@@ -12,4 +13,5 @@ export {
     CreateUser,
     Home,
     ForgotPass,
+    ResetPass,
 }

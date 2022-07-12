@@ -8,6 +8,8 @@ import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../Context/Auth";
 import MenuAppBar from "../../Components/header";
 import Alert from "@mui/material/Alert";
+import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const validationSchema = yup.object({
   firstName: yup
@@ -79,6 +81,8 @@ const Profile = () => {
             variant="contained"
             fullWidth
             sx={{ marginTop: 2 }}
+            startIcon={formik.isSubmitting ? <CircularProgress sx={{ color: "success" }} size={24}/> : <SendIcon />}
+            disabled={formik.isSubmitting}
           >
             Update
           </Button>

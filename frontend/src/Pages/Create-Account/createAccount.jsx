@@ -28,6 +28,12 @@ const validationSchema = yup.object({
     .string("Enter your password")
     .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
+  passwordConfirmation: yup
+    .string()
+    .oneOf(
+      [yup.ref("password"), null],
+      "Mismatch between password and Password confirmation"
+    ),
 });
 
 const sx = {
@@ -40,15 +46,21 @@ const sx = {
 const CreateUser = () => {
   const navigate = useNavigate();
 
-  const [status, setStatus] = useState({
-    message: "",
-  });
+  const [status, setStatus] = useState();
+  const [error, setError] = useState();
 
   const formik = useFormik({
-    initialValues: { firstName: "", lastName: "", email: "", password: "" },
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      passwordConfirmation: "",
+    },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      registerHandler(values, navigate, setStatus);
+      delete values.passwordConfirmation;
+      registerHandler(values, navigate, setStatus, setError);
     },
   });
 
@@ -106,10 +118,28 @@ const CreateUser = () => {
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
           />
+          <TextField
+            id="passwordConfirmation"
+            label="Confirm Password"
+            variant="standard"
+            required
+            fullWidth
+            margin="dense"
+            onChange={formik.handleChange}
+            value={formik.values.passwordConfirmation}
+            error={
+              formik.touched.passwordConfirmation &&
+              Boolean(formik.errors.passwordConfirmation)
+            }
+            helperText={
+              formik.touched.passwordConfirmation &&
+              formik.errors.passwordConfirmation
+            }
+          />
           <Grid container sx={{ mt: 3, alignItems: "flex-end" }}>
             <Grid item xs>
               <Button type="submit" variant="contained">
-                Create Account
+                Sign Up
               </Button>
             </Grid>
             <Grid item>
@@ -119,9 +149,14 @@ const CreateUser = () => {
             </Grid>
           </Grid>
           <Grid>
-            {status.message !== "" && (
+            {status && (
               <Alert severity="info" sx={{ mt: 5 }}>
-                {status.message}
+                {status}
+              </Alert>
+            )}
+            {error && (
+              <Alert severity="error" sx={{ mt: 5 }}>
+                {error}
               </Alert>
             )}
           </Grid>

@@ -35,6 +35,7 @@ export default function MenuAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+      {console.log(auth)}
       <AppBar position="static">
         <Toolbar>
           <IconButton

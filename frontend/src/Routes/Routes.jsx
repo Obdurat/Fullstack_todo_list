@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes as Switch } from 'react-router-dom';
-import { Login, Profile, Task, CreateUser, Home, ForgotPass } from "../Pages";
+import { Login, Profile, Task, CreateUser, Home, ForgotPass, ResetPass } from "../Pages";
 import { ProtecedRoute } from "./ProtectedRoute";
 
 const Routes = () => {
@@ -12,6 +12,7 @@ const Routes = () => {
       <Route path="/register" element={<CreateUser />} />
       <Route path="/" element={<Home />} />
       <Route path="/forgotpass" element={<ForgotPass />} />
+      <Route path="/resetpassword/:token" element={<ResetPass />} />
     </Switch>
   );
 };

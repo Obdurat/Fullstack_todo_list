@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const addTaskSchema = Joi.object({  
-  task: Joi.string().pattern(/[a-zA-Z \.,^~`´ç]/).max(255).required()
+  task: Joi.string().pattern(/[a-zA-Z0-9 \.,^~`´ç]/).max(255).required()
   .messages({
     'any.required': 'Task is required',
     'string.pattern.base': 'Unauthorized Character',
